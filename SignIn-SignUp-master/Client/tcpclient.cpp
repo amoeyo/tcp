@@ -28,13 +28,13 @@ void TcpClient::init()
 
 void TcpClient::connectServer()
 {
-    tcpSocket->abort();   //取消已有的连接
-    tcpSocket->connectToHost(ip,port);
     connect(tcpSocket,SIGNAL(readyRead()),this,SLOT(readMessages()));
 }
 
 void TcpClient::on_sendBtn_clicked()//登陆
 {
+    tcpSocket->abort();   //取消已有的连接
+    tcpSocket->connectToHost(ip,port);
     QString username=ui->userLineEdit->text();
     QString passward=ui->passwardLineEdit->text();
     if(username=="" || passward=="")

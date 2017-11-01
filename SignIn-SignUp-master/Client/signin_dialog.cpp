@@ -27,8 +27,6 @@ void signin_Dialog::init()
 
 void signin_Dialog::connectServer()
 {
-    signSocket->abort();   //取消已有的连接
-    signSocket->connectToHost(ip,port);
     connect(signSocket,SIGNAL(readyRead()),this,SLOT(readMessages()));
 }
 
@@ -57,6 +55,8 @@ void signin_Dialog::readMessages()
 
 void signin_Dialog::on_signinPbt_clicked()
 {
+    signSocket->abort();   //取消已有的连接
+    signSocket->connectToHost(ip,port);
     QString username=ui->userlineEdit->text();
     QString passward=ui->psdlineEdit->text();
     QString question=ui->queslineEdit->text();

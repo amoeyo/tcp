@@ -42,7 +42,7 @@ void TcpServer::receiveData()
         sendData+="#true";
     else
         sendData+="#false";
-    qDebug()<<sendData;
+    tcpSocket->write(sendData.toLatin1());
 }
 
 void TcpServer::on_startBtn_clicked()
@@ -71,37 +71,46 @@ void TcpServer::displayError(QAbstractSocket::SocketError)
 
 bool TcpServer::checkSignIn(QString username,QString passward,QString question,QString answer)
 {
-    QFile file(username);
+    qDebug()<<"用户"<<username<<"请求注册";
+    QString filename=username+"info";
+    QFile file(filename);
+    bool ret;
     if(file.exists()){
-        return false;
+        qDebug()<<"用户已存在";
+        ret=false;
     }
     else{
         QString data=passward+"#"+question+"#"+answer;
         if(!file.open(QIODevice::ReadWrite)){
-            qDebug()<<"文件创建失败";
-            return false;
+            qDebug()<<"用户文件创建失败";
+            ret=false;
         }
         qint64 length = -1;
         length = file.write(data.toLatin1(),data.length());
         if(length==-1){
-            qDebug()<<"文件写入失败";
-            return false;
+            qDebug()<<"用户文件写入失败";
+            ret=false;
         }
         else{
-            qDebug()<<"用户"<<username<<"注册";
+            qDebug()<<"用户"<<username<<"注册成功";
             file.close();
-            return true;
+            ret=true;
         }
     }
-    return false;
+    return ret;
 }
 
 bool TcpServer::checkSignUp(QString username, QString passward)
 {
-    QFile file(username);
+    qDebug()<<"用户"<<username<<"请求登陆";
+    QString filename;
+    filename=username+"info";
+    bool ret;
+    QFile file(filename);
     if(file.exists()){
         if(!file.open(QIODevice::ReadWrite)){
             qDebug()<<"用户文件打开失败";
+            ret=false;
         }
         else{
             qDebug()<<"用户文件打开成功";
@@ -113,13 +122,14 @@ bool TcpServer::checkSignUp(QString username, QString passward)
             if(list[0]==passward){
                 qDebug()<<"用户"<<username<<"登陆";
                 file.close();
-                return true;
+                ret=true;
             }
         }
     }
     else{
         qDebug()<<"用户不存在";
+        ret=false;
     }
     file.close();
-    return false;
+    return ret;
 }
