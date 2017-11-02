@@ -68,3 +68,8 @@ void signin_Dialog::on_signinPbt_clicked()
     signSocket->write(data.toLatin1());
 }
 
+
+void signin_Dialog::on_backPbt_clicked()
+{
+    this->close();
+}

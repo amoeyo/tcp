@@ -5,6 +5,7 @@
 #include <QtNetwork>
 #include <QMessageBox>
 #include "signin_dialog.h"
+#include "findpsddialog.h"
 #include <QDebug>
 
 namespace Ui {
@@ -32,10 +33,13 @@ private slots:
 
     void readMessages();
 
+    void on_fpsdPbt_clicked();
+
 private:
     Ui::TcpClient *ui;
     QTcpSocket *tcpSocket;
     signin_Dialog *signin_dlg=new signin_Dialog;
+    FindpsdDialog *findpsd_dlg=new FindpsdDialog;
 };
 
 #endif // TCPCLIENT_H

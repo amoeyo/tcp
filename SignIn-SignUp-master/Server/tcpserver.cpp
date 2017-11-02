@@ -35,11 +35,20 @@ void TcpServer::receiveData()
         ret=checkSignIn(list[1],list[2],list[3],list[4]);
     else if(list[0]=="b")  //登录
         ret=checkSignUp(list[1],list[2]);
+    else if(list[0]=="c") //找回密码
+        ret=checkQuestion(list[1]);
+    else if(list[0]=="d") //检查答案
+        ret=checkAnswer(list[1],list[2]);
     else
         return;
     QString sendData=list[0];
-    if(ret)
+    if(ret){
         sendData+="#true";
+        if(list[0]=="c")
+            sendData=sendData+"#"+list[1]+"#"+question;
+        if(list[0]=="d")
+            sendData=sendData+"#"+pass;
+    }
     else
         sendData+="#false";
     tcpSocket->write(sendData.toLatin1());
@@ -121,9 +130,74 @@ bool TcpServer::checkSignUp(QString username, QString passward)
             QStringList list=data.split("#");
             if(list[0]==passward){
                 qDebug()<<"用户"<<username<<"登陆";
-                file.close();
                 ret=true;
             }
+        }
+    }
+    else{
+        qDebug()<<"用户不存在";
+        ret=false;
+    }
+    file.close();
+    return ret;
+}
+
+bool TcpServer::checkQuestion(QString username)
+{
+    qDebug()<<"用户"<<username<<"请求找回密码";
+    QString filename;
+    filename=username+"info";
+    bool ret;
+    QFile file(filename);
+    if(file.exists()){
+        if(!file.open(QIODevice::ReadWrite)){
+            qDebug()<<"用户文件打开失败";
+            ret=false;
+        }
+        else{
+            qDebug()<<"用户文件打开成功";
+            QString data;
+            QTextStream in(&file);
+            //读取一行数据
+            data=in.readLine();
+            QStringList list=data.split("#");
+            question=list[1];
+            ret=true;
+        }
+    }
+    else{
+        qDebug()<<"用户不存在";
+        ret=false;
+    }
+    file.close();
+    return ret;
+}
+
+bool TcpServer::checkAnswer(QString username,QString answer)
+{
+    qDebug()<<"用户"<<username<<"发送密保答案";
+    QString filename;
+    filename=username+"info";
+    bool ret;
+    QFile file(filename);
+    if(file.exists()){
+        if(!file.open(QIODevice::ReadWrite)){
+            qDebug()<<"用户文件打开失败";
+            ret=false;
+        }
+        else{
+            qDebug()<<"用户文件打开成功";
+            QString data;
+            QTextStream in(&file);
+            //读取一行数据
+            data=in.readLine();
+            QStringList list=data.split("#");
+            if(list[2]==answer){
+                qDebug()<<"用户"<<username<<"密保问题正确";
+                pass=list[0];
+                ret=true;
+            }
+
         }
     }
     else{

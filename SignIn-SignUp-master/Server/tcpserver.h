@@ -21,6 +21,8 @@ public:
 
     bool checkSignIn(QString username,QString passward,QString question,QString answer);
     bool checkSignUp(QString username,QString passward);
+    bool checkQuestion(QString username);
+    bool checkAnswer(QString username,QString answer);
 
 protected:
     void init();                         // 初始化函数用于完成一些诸如信号与槽之间的联系和变量初始化工作
@@ -39,6 +41,8 @@ private:
     QTcpSocket *tcpSocket;
     QTcpServer *tcpServer;
     QTimer *timer;
+    QString question;
+    QString pass;
 };
 
 #endif // TCPSERVER_H

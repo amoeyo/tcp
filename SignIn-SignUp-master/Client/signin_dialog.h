@@ -27,6 +27,8 @@ private slots:
 
     void on_signinPbt_clicked();
 
+    void on_backPbt_clicked();
+
 private:
     Ui::signin_Dialog *ui;
     QTcpSocket *signSocket;

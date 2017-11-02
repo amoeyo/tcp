@@ -66,14 +66,37 @@ void TcpClient::readMessages()
 {
     QString data=tcpSocket->readAll();
     QStringList list=data.split("#");
-    if(list[0]=="a" && list[1]=="true")
-        QMessageBox::information(this,"信息提示","注册成功!",QMessageBox::Ok);
-    else if(list[0]=="a" && list[1]=="false")
-        QMessageBox::information(this,"信息提示","注册失败,用户名已经被注册!",QMessageBox::Ok);
-    else if(list[0]=="b" && list[1]=="true")
+    if(list[0]=="b" && list[1]=="true")
         QMessageBox::information(this,"信息提示","登录成功!",QMessageBox::Ok);
     else if(list[0]=="b" && list[1]=="false")
-            QMessageBox::information(this,"信息提示","登录失败,用户名或密码错误!",QMessageBox::Ok);
+        QMessageBox::information(this,"信息提示","登录失败,用户名或密码错误!",QMessageBox::Ok);
+    else if(list[0]=="c" && list[1]=="true"){
+        findpsd_dlg->username=list[2];//username+question
+        findpsd_dlg->question=list[3];
+        this->hide();
+        findpsd_dlg->show();
+        findpsd_dlg->exec();
+        this->show();
+    }
+    else if(list[0]=="d" && list[1]=="true"){
+        QMessageBox::information(this,"信息提示",list[2],QMessageBox::Ok);
+    }
     else
         return;
+}
+
+
+
+void TcpClient::on_fpsdPbt_clicked()
+{
+    tcpSocket->abort();   //取消已有的连接
+    tcpSocket->connectToHost(ip,port);
+    QString user=ui->userLineEdit->text();
+    if(user=="")
+        QMessageBox::information(this,"警告","请输入用户名",QMessageBox::Ok);
+    QString bs="c";
+    QString data=bs+"#"+user;
+    if(tcpSocket->write(data.toLatin1())==-1){
+        qDebug()<<"unconnected";
+    }
 }

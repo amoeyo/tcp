@@ -7,6 +7,5 @@ int main(int argc, char *argv[])
     TcpClient w;
     w.setWindowTitle("Client");
     w.show();
-
     return a.exec();
 }

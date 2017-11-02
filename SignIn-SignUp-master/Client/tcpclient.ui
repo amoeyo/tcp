@@ -17,7 +17,7 @@
    <widget class="QPushButton" name="sendBtn">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>290</x>
       <y>180</y>
       <width>71</width>
       <height>23</height>
@@ -30,8 +30,8 @@
    <widget class="QPushButton" name="signBtn">
     <property name="geometry">
      <rect>
-      <x>91</x>
-      <y>181</y>
+      <x>180</x>
+      <y>180</y>
       <width>72</width>
       <height>23</height>
      </rect>
@@ -84,11 +84,19 @@
      </item>
     </layout>
    </widget>
-   <zorder>sendBtn</zorder>
-   <zorder>signBtn</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>userLineEdit</zorder>
+   <widget class="QPushButton" name="fpsdPbt">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>120</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>找回密码</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
