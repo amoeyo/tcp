@@ -18,14 +18,14 @@ SOURCES += main.cpp\
         tcpclient.cpp \
     signin_dialog.cpp \
     findpsddialog.cpp \
-    chatdialog.cpp
+    talantoo.cpp
 
 HEADERS  += tcpclient.h \
     signin_dialog.h \
     findpsddialog.h \
-    chatdialog.h
+    talantoo.h
 
 FORMS    += tcpclient.ui \
     signin_dialog.ui \
     findpsddialog.ui \
-    chatdialog.ui
+    talantoo.ui

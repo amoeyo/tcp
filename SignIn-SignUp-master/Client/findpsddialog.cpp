@@ -1,7 +1,7 @@
 #include "findpsddialog.h"
 #include "ui_findpsddialog.h"
 
-#define ip "10.14.111.204"
+#define ip "192.168.1.3"
 #define port 8000
 
 FindpsdDialog::FindpsdDialog(QWidget *parent) :

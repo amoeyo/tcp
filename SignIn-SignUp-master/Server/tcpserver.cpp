@@ -33,21 +33,29 @@ void TcpServer::receiveData()
     bool ret=0;
     if(list[0]=="a")     //注册
         ret=checkSignIn(list[1],list[2],list[3],list[4]);
-    else if(list[0]=="b")  //登录
+    else if(list[0]=="b"){//登陆
         ret=checkSignUp(list[1],list[2]);
+        recordSignUp(list[1]);
+    }
     else if(list[0]=="c") //找回密码
         ret=checkQuestion(list[1]);
     else if(list[0]=="d") //检查答案
         ret=checkAnswer(list[1],list[2]);
+    else if(list[0]=="f")//查找ip
+        ret=findIpAddr(list[1]);
     else
         return;
     QString sendData=list[0];
     if(ret){
         sendData+="#true";
+        if(list[0]=="b")
+            sendData=sendData+"#"+list[1];
         if(list[0]=="c")
             sendData=sendData+"#"+list[1]+"#"+question;
         if(list[0]=="d")
             sendData=sendData+"#"+pass;
+        if(list[0]=="f")
+            sendData=sendData+"#"+ipaddr;
     }
     else
         sendData+="#false";
@@ -57,7 +65,7 @@ void TcpServer::receiveData()
 void TcpServer::on_startBtn_clicked()
 {
     ui->startBtn->setEnabled(false);
-    if(!tcpServer->listen(QHostAddress::Any,8000))
+    if(!tcpServer->listen(QHostAddress::AnyIPv4,8000))
     {
         qDebug()<<tcpServer->errorString();
         close();
@@ -198,6 +206,60 @@ bool TcpServer::checkAnswer(QString username,QString answer)
                 ret=true;
             }
 
+        }
+    }
+    else{
+        qDebug()<<"用户不存在";
+        ret=false;
+    }
+    file.close();
+    return ret;
+}
+
+void TcpServer::recordSignUp(QString username)
+{
+    qDebug()<<"用户"<<username<<"登陆信息创建";
+    QString filename=username+"record";
+    QFile file(filename);
+    if(file.exists()){
+        qDebug()<<"文件已存在";
+    }
+    else{
+        QString data=tcpSocket->peerAddress().toString();
+        if(!file.open(QIODevice::ReadWrite)){
+            qDebug()<<"用户登陆文件创建失败";
+        }
+        qint64 length = -1;
+        length = file.write(data.toLatin1(),data.length());
+        if(length==-1){
+            qDebug()<<"用户登陆文件写入失败";
+        }
+        else{
+            qDebug()<<"用户"<<username<<"登陆文件写入成功";
+            file.close();
+        }
+    }
+}
+
+bool TcpServer::findIpAddr(QString username)
+{
+    qDebug()<<"请求用户"<<username<<"IP地址";
+    QString filename;
+    filename=username+"record";
+    bool ret;
+    QFile file(filename);
+    if(file.exists()){
+        if(!file.open(QIODevice::ReadWrite)){
+            qDebug()<<"用户登陆文件打开失败";
+            ret=false;
+        }
+        else{
+            qDebug()<<"用户登陆文件打开成功";
+            QString data;
+            QTextStream in(&file);
+            //读取一行数据
+            ipaddr=in.readLine();
+            ret=true;
         }
     }
     else{

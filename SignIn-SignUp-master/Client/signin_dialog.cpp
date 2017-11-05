@@ -1,7 +1,7 @@
 #include "signin_dialog.h"
 #include "ui_signin_dialog.h"
 
-#define ip "10.14.111.204"
+#define ip "192.168.1.3"
 #define port 8000
 
 signin_Dialog::signin_Dialog(QWidget *parent) :

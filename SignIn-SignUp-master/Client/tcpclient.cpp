@@ -1,7 +1,7 @@
 #include "tcpclient.h"
 #include "ui_tcpclient.h"
 
-#define ip "10.14.111.204"
+#define ip "192.168.1.3"
 #define port 8000
 
 TcpClient::TcpClient(QWidget *parent) :
@@ -66,8 +66,12 @@ void TcpClient::readMessages()
 {
     QString data=tcpSocket->readAll();
     QStringList list=data.split("#");
-    if(list[0]=="b" && list[1]=="true")
+    if(list[0]=="b" && list[1]=="true"){
         QMessageBox::information(this,"信息提示","登录成功!",QMessageBox::Ok);
+        client_dlg->username=list[2];
+        client_dlg->show();
+        this->close();
+    }
     else if(list[0]=="b" && list[1]=="false")
         QMessageBox::information(this,"信息提示","登录失败,用户名或密码错误!",QMessageBox::Ok);
     else if(list[0]=="c" && list[1]=="true"){

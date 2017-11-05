@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include "signin_dialog.h"
 #include "findpsddialog.h"
+#include "talantoo.h"
 #include <QDebug>
 
 namespace Ui {
@@ -40,6 +41,7 @@ private:
     QTcpSocket *tcpSocket;
     signin_Dialog *signin_dlg=new signin_Dialog;
     FindpsdDialog *findpsd_dlg=new FindpsdDialog;
+    TalantOO *client_dlg=new TalantOO;
 };
 
 #endif // TCPCLIENT_H
