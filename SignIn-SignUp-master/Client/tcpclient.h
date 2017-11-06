@@ -36,6 +36,10 @@ private slots:
 
     void on_fpsdPbt_clicked();
 
+
+
+
+
 private:
     Ui::TcpClient *ui;
     QTcpSocket *tcpSocket;

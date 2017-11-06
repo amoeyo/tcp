@@ -25,6 +25,10 @@ public:
     bool checkQuestion(QString username);
     bool checkAnswer(QString username,QString answer);
     bool findIpAddr(QString username);
+    bool recordOfflineMessages(QString username,QString mchat);
+    bool findUser(QString username);
+    void deleteFile(QString username);
+    bool findOfflineMessages(QString username);
 
 protected:
     void init();                         // 初始化函数用于完成一些诸如信号与槽之间的联系和变量初始化工作
@@ -46,6 +50,7 @@ private:
     QString question;
     QString pass;
     QString ipaddr;
+    QString offline;
 };
 
 #endif // TCPSERVER_H

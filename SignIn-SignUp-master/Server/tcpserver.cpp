@@ -43,6 +43,15 @@ void TcpServer::receiveData()
         ret=checkAnswer(list[1],list[2]);
     else if(list[0]=="f")//查找ip
         ret=findIpAddr(list[1]);
+    else if(list[0]=="o")
+        ret=recordOfflineMessages(list[1],list[2]);
+    else if(list[0]=="z"){
+        deleteFile(list[1]);
+        return;
+    }
+    else if(list[0]=="g"){
+        ret=findOfflineMessages(list[1]);
+    }
     else
         return;
     QString sendData=list[0];
@@ -56,9 +65,20 @@ void TcpServer::receiveData()
             sendData=sendData+"#"+pass;
         if(list[0]=="f")
             sendData=sendData+"#"+ipaddr;
+        if(list[0]=="g")
+            sendData=sendData+"#"+offline;
     }
-    else
+    else{
         sendData+="#false";
+        if(list[0]=="f"){
+            ret=findUser(list[1]);
+            if(ret)
+                sendData += "#true";
+            else
+                sendData += "#false";
+        }
+    }
+
     tcpSocket->write(sendData.toLatin1());
 }
 
@@ -219,7 +239,7 @@ bool TcpServer::checkAnswer(QString username,QString answer)
 void TcpServer::recordSignUp(QString username)
 {
     qDebug()<<"用户"<<username<<"登陆信息创建";
-    QString filename=username+"record";
+    QString filename=username+"signup";
     QFile file(filename);
     if(file.exists()){
         qDebug()<<"文件已存在";
@@ -245,7 +265,7 @@ bool TcpServer::findIpAddr(QString username)
 {
     qDebug()<<"请求用户"<<username<<"IP地址";
     QString filename;
-    filename=username+"record";
+    filename=username+"signup";
     bool ret;
     QFile file(filename);
     if(file.exists()){
@@ -263,9 +283,88 @@ bool TcpServer::findIpAddr(QString username)
         }
     }
     else{
-        qDebug()<<"用户不存在";
+        qDebug()<<"用户登陆信息不存在";
         ret=false;
     }
     file.close();
+    return ret;
+}
+
+bool TcpServer::recordOfflineMessages(QString username,QString data)
+{
+    qDebug()<<"用户"<<username<<"离线消息文件创建";
+    QString filename=username+"record";
+    QFile file(filename);
+    bool ret;
+    if(!file.open(QIODevice::ReadWrite |QIODevice::Text)){
+        qDebug()<<"用户离线消息文件创建失败";
+        ret=false;
+    }
+    qint64 length = -1;
+    length = file.write(data.toLatin1(),data.length());
+    if(length==-1){
+        qDebug()<<"文件写入失败";
+        ret=false;
+    }
+    else{
+        qDebug()<<"用户"<<username<<"离线消息写入成功";
+        ret=true;
+        file.close();
+    }
+    return ret;
+}
+
+void TcpServer::deleteFile(QString username)
+{
+    qDebug()<<"用户"<<username<<"退出";
+    QString filename=username+"signup";
+    QFile file(filename);
+    if(file.exists())
+        file.remove();
+    qDebug()<<"删除用户文件";
+}
+
+bool TcpServer::findUser(QString username)
+{
+    qDebug()<<"查找用户"<<username<<"是否存在";
+    QString filename;
+    filename=username+"info";
+    bool ret;
+    QFile file(filename);
+    if(file.exists()){
+        ret=true;
+    }
+    else{
+        qDebug()<<"用户信息不存在";
+        ret=false;
+    }
+    file.close();
+    return ret;
+}
+
+bool TcpServer::findOfflineMessages(QString username)
+{
+    qDebug()<<"用户"<<username<<"发送离线信息";
+    QString filename;
+    filename=username+"record";
+    bool ret;
+    QFile file(filename);
+    if(file.exists()){
+        if(!file.open(QIODevice::ReadWrite)){
+            qDebug()<<"离线消息打开失败";
+            ret=false;
+        }
+        else{
+            qDebug()<<"离线消息打开成功";
+            QString data=file.readAll();
+            offline=data;
+            ret=true;
+        }
+    }
+    else{
+        qDebug()<<"用户不存在";
+        ret=false;
+    }
+    file.remove();
     return ret;
 }

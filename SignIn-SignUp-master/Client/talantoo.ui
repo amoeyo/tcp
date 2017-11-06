@@ -81,6 +81,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="exitPbt">
+        <property name="text">
+         <string>退出</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>

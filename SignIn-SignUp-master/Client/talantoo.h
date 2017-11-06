@@ -24,7 +24,7 @@ public:
 protected:
     void init();
     void newListen();
-
+    void connectServer();
 
 
 
@@ -37,18 +37,32 @@ private slots:
 
     void onReciveData();  //接收数据
 
+    void reciveMessages();
+
     void on_connectPbt_clicked();
 
     void on_sendmessPbt_clicked();
+
+
+
+
+    void on_exitPbt_clicked();
+
+    void on_offlinePbt_clicked();
 
 private:
     Ui::TalantOO *ui;
     QTcpSocket *fusrSocket;
     QTcpServer *chatServer;
     QTcpSocket *tcpSocket_1;
+    QTcpSocket *tcpSocket_2;
     bool isserver;
+    bool pbt;
+    int isconnect;
     QString userip;
     QString chatip;
+    QString mChat;
+    enum STATE{off,toclient,toserver};
 
 };
 

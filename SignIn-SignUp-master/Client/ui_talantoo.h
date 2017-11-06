@@ -40,6 +40,7 @@ public:
     QLabel *label;
     QLineEdit *usrLet;
     QPushButton *connectPbt;
+    QPushButton *exitPbt;
 
     void setupUi(QDialog *TalantOO)
     {
@@ -99,6 +100,11 @@ public:
 
         horizontalLayout_2->addWidget(connectPbt);
 
+        exitPbt = new QPushButton(verticalLayoutWidget);
+        exitPbt->setObjectName(QStringLiteral("exitPbt"));
+
+        horizontalLayout_2->addWidget(exitPbt);
+
 
         verticalLayout->addLayout(horizontalLayout_2);
 
@@ -118,6 +124,7 @@ public:
         label->setText(QApplication::translate("TalantOO", "\347\233\256\346\240\207\347\224\250\346\210\267", Q_NULLPTR));
         usrLet->setPlaceholderText(QApplication::translate("TalantOO", "\345\234\250\346\255\244\350\276\223\345\205\245\350\277\236\346\216\245\347\224\250\346\210\267\345\220\215", Q_NULLPTR));
         connectPbt->setText(QApplication::translate("TalantOO", "\350\277\236\346\216\245", Q_NULLPTR));
+        exitPbt->setText(QApplication::translate("TalantOO", "\351\200\200\345\207\272", Q_NULLPTR));
     } // retranslateUi
 
 };
