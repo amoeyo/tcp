@@ -74,6 +74,9 @@ void TalantOO::readMessages()
     else if(list[0]=="g" && list[1]=="false"){
         ui->textBrowser->append("离线消息已发送或为空");
     }
+    else if(list[0]=="z"&&list[1]=="true"){
+        this->close();
+    }
     else
         return;
 }
@@ -144,6 +147,8 @@ void TalantOO::on_connectPbt_clicked()
         tcpSocket_2->disconnectFromHost();
         fusrSocket->disconnectFromHost();
         ui->connectPbt->setText("连接");
+        isconnect=off;
+        pbt=true;
     }
 }
 
@@ -194,7 +199,6 @@ void TalantOO::on_exitPbt_clicked()
     QString bs="z";
     QString data=bs+"#"+username;
     fusrSocket->write(data.toLatin1());
-    this->close();
 }
 
 void TalantOO::on_offlinePbt_clicked()

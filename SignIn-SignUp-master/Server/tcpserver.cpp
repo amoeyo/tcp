@@ -46,8 +46,7 @@ void TcpServer::receiveData()
     else if(list[0]=="o")
         ret=recordOfflineMessages(list[1],list[2]);
     else if(list[0]=="z"){
-        deleteFile(list[1]);
-        return;
+        ret=deleteFile(list[1]);
     }
     else if(list[0]=="g"){
         ret=findOfflineMessages(list[1]);
@@ -141,10 +140,17 @@ bool TcpServer::checkSignUp(QString username, QString passward)
 {
     qDebug()<<"用户"<<username<<"请求登陆";
     QString filename;
+    QString filename_1;
     filename=username+"info";
+    filename_1=username+"signup";
     bool ret;
     QFile file(filename);
-    if(file.exists()){
+    QFile file_1(filename_1);
+    if(file_1.exists()){
+        qDebug()<<"用户已登录";
+        ret=false;
+    }
+    else if(file.exists()){
         if(!file.open(QIODevice::ReadWrite)){
             qDebug()<<"用户文件打开失败";
             ret=false;
@@ -314,7 +320,7 @@ bool TcpServer::recordOfflineMessages(QString username,QString data)
     return ret;
 }
 
-void TcpServer::deleteFile(QString username)
+bool TcpServer::deleteFile(QString username)
 {
     qDebug()<<"用户"<<username<<"退出";
     QString filename=username+"signup";
@@ -322,6 +328,7 @@ void TcpServer::deleteFile(QString username)
     if(file.exists())
         file.remove();
     qDebug()<<"删除用户文件";
+    return true;
 }
 
 bool TcpServer::findUser(QString username)

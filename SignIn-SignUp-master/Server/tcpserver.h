@@ -27,7 +27,7 @@ public:
     bool findIpAddr(QString username);
     bool recordOfflineMessages(QString username,QString mchat);
     bool findUser(QString username);
-    void deleteFile(QString username);
+    bool deleteFile(QString username);
     bool findOfflineMessages(QString username);
 
 protected:

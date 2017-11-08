@@ -73,7 +73,7 @@ void TcpClient::readMessages()
         this->close();
     }
     else if(list[0]=="b" && list[1]=="false")
-        QMessageBox::information(this,"信息提示","登录失败,用户名或密码错误!",QMessageBox::Ok);
+        QMessageBox::information(this,"信息提示","登录失败!信息错误或用户已登录！",QMessageBox::Ok);
     else if(list[0]=="c" && list[1]=="true"){
         findpsd_dlg->username=list[2];//username+question
         findpsd_dlg->question=list[3];
