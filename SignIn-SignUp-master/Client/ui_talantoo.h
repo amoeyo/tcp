@@ -32,15 +32,15 @@ public:
     QVBoxLayout *verticalLayout;
     QTextBrowser *textBrowser;
     QHBoxLayout *horizontalLayout;
-    QPushButton *sendfilePbt;
+    QPushButton *offlinePbt;
     QLineEdit *sendmessLet;
     QPushButton *sendmessPbt;
-    QPushButton *offlinePbt;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label;
     QLineEdit *usrLet;
     QPushButton *connectPbt;
     QPushButton *exitPbt;
+    QPushButton *sendfilePbt;
 
     void setupUi(QDialog *TalantOO)
     {
@@ -49,7 +49,7 @@ public:
         TalantOO->resize(661, 504);
         verticalLayoutWidget = new QWidget(TalantOO);
         verticalLayoutWidget->setObjectName(QStringLiteral("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(30, 20, 601, 461));
+        verticalLayoutWidget->setGeometry(QRect(30, 20, 611, 461));
         verticalLayout = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
@@ -60,10 +60,10 @@ public:
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        sendfilePbt = new QPushButton(verticalLayoutWidget);
-        sendfilePbt->setObjectName(QStringLiteral("sendfilePbt"));
+        offlinePbt = new QPushButton(verticalLayoutWidget);
+        offlinePbt->setObjectName(QStringLiteral("offlinePbt"));
 
-        horizontalLayout->addWidget(sendfilePbt);
+        horizontalLayout->addWidget(offlinePbt);
 
         sendmessLet = new QLineEdit(verticalLayoutWidget);
         sendmessLet->setObjectName(QStringLiteral("sendmessLet"));
@@ -74,11 +74,6 @@ public:
         sendmessPbt->setObjectName(QStringLiteral("sendmessPbt"));
 
         horizontalLayout->addWidget(sendmessPbt);
-
-        offlinePbt = new QPushButton(verticalLayoutWidget);
-        offlinePbt->setObjectName(QStringLiteral("offlinePbt"));
-
-        horizontalLayout->addWidget(offlinePbt);
 
 
         verticalLayout->addLayout(horizontalLayout);
@@ -108,6 +103,11 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_2);
 
+        sendfilePbt = new QPushButton(verticalLayoutWidget);
+        sendfilePbt->setObjectName(QStringLiteral("sendfilePbt"));
+
+        verticalLayout->addWidget(sendfilePbt);
+
 
         retranslateUi(TalantOO);
 
@@ -117,14 +117,14 @@ public:
     void retranslateUi(QDialog *TalantOO)
     {
         TalantOO->setWindowTitle(QApplication::translate("TalantOO", "Dialog", Q_NULLPTR));
-        sendfilePbt->setText(QApplication::translate("TalantOO", "\345\217\221\351\200\201\346\226\207\344\273\266", Q_NULLPTR));
+        offlinePbt->setText(QApplication::translate("TalantOO", "\347\246\273\347\272\277\346\266\210\346\201\257", Q_NULLPTR));
         sendmessLet->setPlaceholderText(QApplication::translate("TalantOO", "\345\234\250\346\255\244\350\276\223\345\205\245\346\266\210\346\201\257", Q_NULLPTR));
         sendmessPbt->setText(QApplication::translate("TalantOO", "\345\217\221\351\200\201\346\266\210\346\201\257", Q_NULLPTR));
-        offlinePbt->setText(QApplication::translate("TalantOO", "\347\246\273\347\272\277\346\266\210\346\201\257", Q_NULLPTR));
         label->setText(QApplication::translate("TalantOO", "\347\233\256\346\240\207\347\224\250\346\210\267", Q_NULLPTR));
         usrLet->setPlaceholderText(QApplication::translate("TalantOO", "\345\234\250\346\255\244\350\276\223\345\205\245\350\277\236\346\216\245\347\224\250\346\210\267\345\220\215", Q_NULLPTR));
         connectPbt->setText(QApplication::translate("TalantOO", "\350\277\236\346\216\245", Q_NULLPTR));
         exitPbt->setText(QApplication::translate("TalantOO", "\351\200\200\345\207\272", Q_NULLPTR));
+        sendfilePbt->setText(QApplication::translate("TalantOO", "\346\226\207\344\273\266\344\274\240\350\276\223", Q_NULLPTR));
     } // retranslateUi
 
 };

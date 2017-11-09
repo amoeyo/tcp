@@ -27,11 +27,16 @@ void TalantOO::init()
     fusrSocket=new QTcpSocket(this);
     tcpSocket_1=new QTcpSocket(this);
     tcpSocket_2=new QTcpSocket(this);
+    fileSocket=new QTcpSocket(this);
     chatServer=new QTcpServer(this);
+    fileServer=new QTcpServer(this);
 
     connect(chatServer,SIGNAL(newConnection()),SLOT(acceptConnection()));
+    connect(fileServer,SIGNAL(newConnection()),SLOT(fileConnection()));
     connect(fusrSocket,SIGNAL(readyRead()),this,SLOT(readMessages()));
     connect(fusrSocket,SIGNAL(error(QAbstractSocket::SocketError)),
+            this,SLOT(displayError(QAbstractSocket::SocketError)));   //发生错误时执行displayError函数
+    connect(fileSocket,SIGNAL(error(QAbstractSocket::SocketError)),
             this,SLOT(displayError(QAbstractSocket::SocketError)));   //发生错误时执行displayError函数
     connect(tcpSocket_1,SIGNAL(error(QAbstractSocket::SocketError)),
             this,SLOT(displayError(QAbstractSocket::SocketError)));   //发生错误时执行displayError函数
@@ -79,6 +84,24 @@ void TalantOO::readMessages()
     }
     else
         return;
+
+}
+
+void TalantOO::fileSlot()
+{
+    QString data=fileSocket->readAll();
+    QStringList list=data.split("#");
+    if(list[0]=="p"&&list[1]=="true"){
+        QString bs="h";
+        QString send=bs+"#true";
+        fileSocket->write(send.toLatin1());
+        this->hide();
+        receive_dlg->show();
+        receive_dlg->exec();
+        this->show();
+    }
+    else
+        return;
 }
 
 void TalantOO::onReciveData()
@@ -104,6 +127,10 @@ void TalantOO::newListen()
         qDebug()<<chatServer->errorString();
         chatServer->close();
     }
+    if(!fileServer->listen(QHostAddress::AnyIPv4,6665)){
+        qDebug()<<fileServer->errorString();
+        fileServer->close();
+    }
 }
 
 void TalantOO::acceptConnection()
@@ -118,6 +145,14 @@ void TalantOO::acceptConnection()
         ui->connectPbt->setText("取消连接");
     }
     qDebug()<<"listen"<<chatip;
+}
+
+void TalantOO::fileConnection()
+
+{
+    fileSocket=fileServer->nextPendingConnection();
+    connect(fileSocket,SIGNAL(readyRead()),SLOT(fileSlot()));
+
 }
 
 void TalantOO::on_connectPbt_clicked()
@@ -208,4 +243,13 @@ void TalantOO::on_offlinePbt_clicked()
     QString bs="g";
     QString data=bs+"#"+username;
     fusrSocket->write(data.toLatin1());
+}
+
+void TalantOO::on_sendfilePbt_clicked()
+{
+    sendfile_dlg->sender=username;
+    this->hide();
+    sendfile_dlg->show();
+    sendfile_dlg->exec();
+    this->show();
 }

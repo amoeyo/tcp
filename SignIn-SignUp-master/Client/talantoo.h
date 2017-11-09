@@ -5,6 +5,8 @@
 #include <QtNetwork>
 #include <QMessageBox>
 #include <QDebug>
+#include <sendfiledialog.h>
+#include <reveivedialog.h>
 
 namespace Ui {
 class TalantOO;
@@ -33,6 +35,10 @@ private slots:
 
     void acceptConnection(); //接收客户端连接
 
+    void fileConnection();
+
+    void fileSlot();
+
     void readMessages();
 
     void onReciveData();  //接收数据
@@ -50,10 +56,14 @@ private slots:
 
     void on_offlinePbt_clicked();
 
+    void on_sendfilePbt_clicked();
+
 private:
     Ui::TalantOO *ui;
     QTcpSocket *fusrSocket;
     QTcpServer *chatServer;
+    QTcpServer *fileServer;
+    QTcpSocket *fileSocket;
     QTcpSocket *tcpSocket_1;
     QTcpSocket *tcpSocket_2;
     bool isserver;
@@ -63,6 +73,8 @@ private:
     QString chatip;
     QString mChat;
     enum STATE{off,toclient,toserver};
+    SendFileDialog *sendfile_dlg=new SendFileDialog;
+    ReveiveDialog *receive_dlg=new ReveiveDialog;
 
 };
 

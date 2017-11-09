@@ -18,7 +18,7 @@
     <rect>
      <x>30</x>
      <y>20</y>
-     <width>601</width>
+     <width>611</width>
      <height>461</height>
     </rect>
    </property>
@@ -29,9 +29,9 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="sendfilePbt">
+       <widget class="QPushButton" name="offlinePbt">
         <property name="text">
-         <string>发送文件</string>
+         <string>离线消息</string>
         </property>
        </widget>
       </item>
@@ -46,13 +46,6 @@
        <widget class="QPushButton" name="sendmessPbt">
         <property name="text">
          <string>发送消息</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="offlinePbt">
-        <property name="text">
-         <string>离线消息</string>
         </property>
        </widget>
       </item>
@@ -89,6 +82,13 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item>
+     <widget class="QPushButton" name="sendfilePbt">
+      <property name="text">
+       <string>文件传输</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
