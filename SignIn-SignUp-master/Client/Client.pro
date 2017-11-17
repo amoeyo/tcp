@@ -20,14 +20,16 @@ SOURCES += main.cpp\
     findpsddialog.cpp \
     talantoo.cpp \
     sendfiledialog.cpp \
-    reveivedialog.cpp
+    reveivedialog.cpp \
+    packet.cpp
 
 HEADERS  += tcpclient.h \
     signin_dialog.h \
     findpsddialog.h \
     talantoo.h \
     sendfiledialog.h \
-    reveivedialog.h
+    reveivedialog.h \
+    packet.h
 
 FORMS    += tcpclient.ui \
     signin_dialog.ui \

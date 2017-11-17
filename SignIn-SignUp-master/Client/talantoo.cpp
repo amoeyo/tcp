@@ -19,6 +19,12 @@ TalantOO::TalantOO(QWidget *parent) :
 
 TalantOO::~TalantOO()
 {
+    delete fusrSocket;
+    delete tcpSocket_1;
+    delete tcpSocket_2;
+    delete fileServer;
+    delete fileSocket;
+    delete chatServer;
     delete ui;
 }
 
@@ -66,8 +72,11 @@ void TalantOO::readMessages()
         isserver=false;
     }
     else if(list[0]=="f" && list[1]=="false"){
-        if(list[2]=="false")
+        if(list[2]=="false"){
             QMessageBox::information(this,"信息提示","失败,用户不存在！",QMessageBox::Ok);
+            ui->usrLet->clear();
+        }
+
         else{
             ui->textBrowser->append("用户不在线，可发送离线消息。");
             isconnect=toserver;
@@ -127,7 +136,7 @@ void TalantOO::newListen()
         qDebug()<<chatServer->errorString();
         chatServer->close();
     }
-    if(!fileServer->listen(QHostAddress::AnyIPv4,6665)){
+    if(!fileServer->listen(QHostAddress::AnyIPv4,1111)){
         qDebug()<<fileServer->errorString();
         fileServer->close();
     }
@@ -151,6 +160,7 @@ void TalantOO::fileConnection()
 
 {
     fileSocket=fileServer->nextPendingConnection();
+    qDebug()<<"recieve file connection from"<<fileSocket->peerAddress().toString();
     connect(fileSocket,SIGNAL(readyRead()),SLOT(fileSlot()));
 
 }
@@ -166,6 +176,7 @@ void TalantOO::on_connectPbt_clicked()
             QMessageBox::information(this,"信息提示","请输入用户名！",QMessageBox::Ok);
         if(user==username){
             QMessageBox::information(this,"警告","请不要自问自答！",QMessageBox::Ok);
+            ui->usrLet->clear();
             return;
         }
         QString bs="f";
@@ -182,6 +193,8 @@ void TalantOO::on_connectPbt_clicked()
         tcpSocket_2->disconnectFromHost();
         fusrSocket->disconnectFromHost();
         ui->connectPbt->setText("连接");
+        ui->usrLet->clear();
+        mChat.clear();
         isconnect=off;
         pbt=true;
     }
@@ -191,6 +204,7 @@ void TalantOO::on_sendmessPbt_clicked()
 {
     if(pbt){
         QMessageBox::information(this,"信息提示","请先建立连接！",QMessageBox::Ok);
+        ui->usrLet->clear();
         return;
     }
     if(isconnect==toclient){
@@ -215,7 +229,7 @@ void TalantOO::on_sendmessPbt_clicked()
     else if(isconnect==toserver){
         QString textEdit = ui->sendmessLet->text();
         QString strData = QTime::currentTime().toString() + "\n" + textEdit.toLocal8Bit() + "\n";
-        mChat = mChat + username + " " +strData;
+        mChat = mChat + username + " " +strData+" (offline)";
         ui->textBrowser->setText(mChat);
         QString bs="o";
         QString offlineEdit=bs+"#"+chatname+"#"+mChat;
@@ -224,6 +238,7 @@ void TalantOO::on_sendmessPbt_clicked()
     }
     else
         return;
+    ui->sendmessLet->clear();
 }
 
 
@@ -252,4 +267,13 @@ void TalantOO::on_sendfilePbt_clicked()
     sendfile_dlg->show();
     sendfile_dlg->exec();
     this->show();
+}
+
+void TalantOO::closeEvent(QCloseEvent *)
+{
+    fusrSocket->abort();
+    fusrSocket->connectToHost(ip,port);
+    QString bs="z";
+    QString data=bs+"#"+username;
+    fusrSocket->write(data.toLatin1());
 }

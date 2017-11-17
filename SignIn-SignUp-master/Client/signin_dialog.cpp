@@ -39,14 +39,20 @@ void signin_Dialog::readMessages()
 {
     QString data=signSocket->readAll();
     QStringList list=data.split("#");
-    if(list[0]=="a" && list[1]=="true")
+    if(list[0]=="a" && list[1]=="true"){
         QMessageBox::information(this,"信息提示","注册成功!",QMessageBox::Ok);
-    else if(list[0]=="a" && list[1]=="false")
+        ui->anslineEdit->clear();
+        ui->psdlineEdit->clear();
+        ui->queslineEdit->clear();
+        ui->userlineEdit->clear();
+        this->close();
+    }
+
+    else if(list[0]=="a" && list[1]=="false"){
         QMessageBox::information(this,"信息提示","注册失败,用户名已经被注册!",QMessageBox::Ok);
-    else if(list[0]=="b" && list[1]=="true")
-        QMessageBox::information(this,"信息提示","登录成功!",QMessageBox::Ok);
-    else if(list[0]=="b" && list[1]=="false")
-        QMessageBox::information(this,"信息提示","登录失败,用户名或密码错误!",QMessageBox::Ok);
+        ui->userlineEdit->clear();
+        ui->psdlineEdit->clear();
+    }
     else
         return;
 }
@@ -71,5 +77,9 @@ void signin_Dialog::on_signinPbt_clicked()
 
 void signin_Dialog::on_backPbt_clicked()
 {
+    ui->anslineEdit->clear();
+    ui->psdlineEdit->clear();
+    ui->queslineEdit->clear();
+    ui->userlineEdit->clear();
     this->close();
 }

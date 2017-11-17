@@ -18,6 +18,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
 
@@ -37,6 +38,7 @@ public:
     QPushButton *choosePbt;
     QPushButton *sendPbt;
     QPushButton *backPbt;
+    QProgressBar *progressBar;
 
     void setupUi(QDialog *SendFileDialog)
     {
@@ -66,7 +68,7 @@ public:
 
         horizontalLayoutWidget_2 = new QWidget(SendFileDialog);
         horizontalLayoutWidget_2->setObjectName(QStringLiteral("horizontalLayoutWidget_2"));
-        horizontalLayoutWidget_2->setGeometry(QRect(40, 110, 501, 78));
+        horizontalLayoutWidget_2->setGeometry(QRect(40, 100, 501, 78));
         horizontalLayout_2 = new QHBoxLayout(horizontalLayoutWidget_2);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
@@ -82,10 +84,14 @@ public:
 
         sendPbt = new QPushButton(SendFileDialog);
         sendPbt->setObjectName(QStringLiteral("sendPbt"));
-        sendPbt->setGeometry(QRect(40, 210, 361, 41));
+        sendPbt->setGeometry(QRect(40, 180, 361, 41));
         backPbt = new QPushButton(SendFileDialog);
         backPbt->setObjectName(QStringLiteral("backPbt"));
-        backPbt->setGeometry(QRect(420, 210, 121, 41));
+        backPbt->setGeometry(QRect(420, 180, 121, 41));
+        progressBar = new QProgressBar(SendFileDialog);
+        progressBar->setObjectName(QStringLiteral("progressBar"));
+        progressBar->setGeometry(QRect(40, 240, 501, 23));
+        progressBar->setValue(24);
 
         retranslateUi(SendFileDialog);
 

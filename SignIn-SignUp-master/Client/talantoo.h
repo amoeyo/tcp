@@ -27,6 +27,7 @@ protected:
     void init();
     void newListen();
     void connectServer();
+    void closeEvent(QCloseEvent *);
 
 
 

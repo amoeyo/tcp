@@ -51,6 +51,9 @@ private:
     QString pass;
     QString ipaddr;
     QString offline;
+    int key=2;
+    void Encryption(int a, const QString strs, QString &results);
+    void Decryption(int a, const QString strs, QString &results);
 };
 
 #endif // TCPSERVER_H

@@ -35,7 +35,8 @@ void TcpServer::receiveData()
         ret=checkSignIn(list[1],list[2],list[3],list[4]);
     else if(list[0]=="b"){//登陆
         ret=checkSignUp(list[1],list[2]);
-        recordSignUp(list[1]);
+        if(ret)
+            recordSignUp(list[1]);
     }
     else if(list[0]=="c") //找回密码
         ret=checkQuestion(list[1]);
@@ -116,7 +117,9 @@ bool TcpServer::checkSignIn(QString username,QString passward,QString question,Q
         ret=false;
     }
     else{
-        QString data=passward+"#"+question+"#"+answer;
+        QString datas=passward+"#"+question+"#"+answer;
+        QString data;
+        Encryption(key,datas,data);//加密
         if(!file.open(QIODevice::ReadWrite)){
             qDebug()<<"用户文件创建失败";
             ret=false;
@@ -157,10 +160,13 @@ bool TcpServer::checkSignUp(QString username, QString passward)
         }
         else{
             qDebug()<<"用户文件打开成功";
+            QString datas;
             QString data;
             QTextStream in(&file);
             //读取一行数据
-            data=in.readLine();
+            datas=in.readLine();
+            Decryption(key,datas,data);
+            qDebug()<<data;
             QStringList list=data.split("#");
             if(list[0]==passward){
                 qDebug()<<"用户"<<username<<"登陆";
@@ -190,10 +196,12 @@ bool TcpServer::checkQuestion(QString username)
         }
         else{
             qDebug()<<"用户文件打开成功";
+            QString datas;
             QString data;
             QTextStream in(&file);
             //读取一行数据
-            data=in.readLine();
+            datas=in.readLine();
+            Decryption(key,datas,data);
             QStringList list=data.split("#");
             question=list[1];
             ret=true;
@@ -221,10 +229,13 @@ bool TcpServer::checkAnswer(QString username,QString answer)
         }
         else{
             qDebug()<<"用户文件打开成功";
+            QString datas;
             QString data;
             QTextStream in(&file);
             //读取一行数据
-            data=in.readLine();
+
+            datas=in.readLine();
+            Decryption(key,datas,data);
             QStringList list=data.split("#");
             if(list[2]==answer){
                 qDebug()<<"用户"<<username<<"密保问题正确";
@@ -299,6 +310,7 @@ bool TcpServer::findIpAddr(QString username)
 bool TcpServer::recordOfflineMessages(QString username,QString data)
 {
     qDebug()<<"用户"<<username<<"离线消息文件创建";
+    QString datas;
     QString filename=username+"record";
     QFile file(filename);
     bool ret;
@@ -307,7 +319,8 @@ bool TcpServer::recordOfflineMessages(QString username,QString data)
         ret=false;
     }
     qint64 length = -1;
-    length = file.write(data.toLatin1(),data.length());
+    Encryption(key,data,datas);
+    length = file.write(datas.toLatin1(),datas.length());
     if(length==-1){
         qDebug()<<"文件写入失败";
         ret=false;
@@ -363,7 +376,9 @@ bool TcpServer::findOfflineMessages(QString username)
         }
         else{
             qDebug()<<"离线消息打开成功";
-            QString data=file.readAll();
+            QString data;
+            QString datas=file.readAll();
+            Decryption(key,datas,data);
             offline=data;
             ret=true;
         }
@@ -374,4 +389,34 @@ bool TcpServer::findOfflineMessages(QString username)
     }
     file.remove();
     return ret;
+}
+
+void  TcpServer::Encryption(int a, const QString strs, QString &results)
+{
+    char* str;
+    char result[50];
+    /* QString转char* */
+    QByteArray ba=strs.toLatin1();
+    str=ba.data();
+    int i;
+    for(i = 0; str[i] != '\0'; i ++){
+        result[i] = str[i]+(a+i);
+    }
+    result[i] = '\0';
+    /* char*转QString */
+    results=QString(QLatin1String(result));
+}
+
+void TcpServer::Decryption(int a, const QString strs, QString &results)
+{
+    char* str;
+    char result[50];
+    QByteArray ba=strs.toLatin1();
+    str=ba.data();
+    int i;
+    for(i = 0; str[i] != '\0'; i ++){
+        result[i] = str[i]-(a+i);
+    }
+    result[i] = '\0';
+    results=QString(QLatin1String(result));
 }
