@@ -213,10 +213,10 @@ void TalantOO::on_sendmessPbt_clicked()
             tcpSocket_2->connectToHost(chatip,6666);
             qDebug()<<"Client asks connection";
         }
-        QString textEdit = ui->sendmessLet->text();
+        QString textEdit = ui->sendmessLet->text();//获取textline上的内容
         QString strData = QTime::currentTime().toString() + "\n" + textEdit.toLocal8Bit() + "\n";
         mChat = mChat + username + " " +strData;
-        ui->textBrowser->setText(mChat);
+        ui->textBrowser->setText(mChat);//在上面那个大白框里面输出刚刚输入的内容
         if(isserver){
             tcpSocket_1->write(mChat.toLatin1());
             qDebug()<<"server send to"<<chatip;

@@ -319,8 +319,7 @@ bool TcpServer::recordOfflineMessages(QString username,QString data)
         ret=false;
     }
     qint64 length = -1;
-    Encryption(key,data,datas);
-    length = file.write(datas.toLatin1(),datas.length());
+    length = file.write(data.toLatin1(),data.length());
     if(length==-1){
         qDebug()<<"文件写入失败";
         ret=false;
@@ -376,9 +375,7 @@ bool TcpServer::findOfflineMessages(QString username)
         }
         else{
             qDebug()<<"离线消息打开成功";
-            QString data;
-            QString datas=file.readAll();
-            Decryption(key,datas,data);
+            QString data=file.readAll();
             offline=data;
             ret=true;
         }

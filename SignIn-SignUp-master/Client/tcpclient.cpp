@@ -1,7 +1,7 @@
 #include "tcpclient.h"
 #include "ui_tcpclient.h"
 
-#define ip "192.168.1.3"
+#define ip "192.168.5.1"
 #define port 8000
 
 TcpClient::TcpClient(QWidget *parent) :

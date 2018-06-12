@@ -6,7 +6,7 @@ using namespace std;
 
 #define MAX_WINDOW_SIZE 512
 
-#define ip "192.168.1.3"
+#define ip "192.168.5.1"
 #define port 8000
 
 SendFileDialog::SendFileDialog(QWidget *parent) :
@@ -16,7 +16,7 @@ SendFileDialog::SendFileDialog(QWidget *parent) :
     i=0;
     ui->setupUi(this);
     bytesSend=0;
-    sending_window_size=50;
+    sending_window_size=200;
     ui->fileLet->setEnabled(false);
     ui->choosePbt->setEnabled(false);
     ui->sendPbt->setEnabled(false);
@@ -68,7 +68,6 @@ void SendFileDialog::handleTimeout()
     if(timeout_counter>=3) {
         state=0;
         timeout_counter=0;
-        qDebug()<<"超时";
         //close();
     }
     else
@@ -113,17 +112,15 @@ void SendFileDialog::readPendingDatagrams()
     char ack_buf[8];
 
     while(udpSocket->hasPendingDatagrams()){
-        qDebug()<<"receive slot";
         int n = udpSocket->readDatagram((char*)&ack_buf,(qint64)sizeof(struct AckPacket));
         if (n < 0){
             return ;
         }
 
         struct AckPacket* ack = (struct AckPacket *) ack_buf;
-        qDebug()<<"receive ack"<<ack->ack;
         if(ack->len == 8 && ack->checksum == ack_packet_checksum(ack)){
             if(ack->ack < (unsigned int)base) {//ack->ack==base
-                qDebug()<<"ack"<<ack->ack<<"is lost";
+
                 if(ack->ack != (unsigned int)last_resent) { //if duplicate ack was sent but for a newly lost pkt
                     duplicate_ack_num ++;
                 }
@@ -131,7 +128,7 @@ void SendFileDialog::readPendingDatagrams()
                     last_resent = ack->ack;
                     handle_loss_event();
                 }
-            }//1 2 3 4 (5) 6 7 8 9
+            }
             else {
                 sending_window_size = min(MAX_WINDOW_SIZE, sending_window_size*2);
                 if(resend_base != 0 && resend_base < next_seq_no) {
@@ -145,7 +142,7 @@ void SendFileDialog::readPendingDatagrams()
             }
             timeout_counter=0;
             base = ack->ack + 1;
-            qDebug("base=%d",base);
+
             time.start();
         }
         else if(ack->len==0&&state==1)//发送完毕
@@ -168,7 +165,6 @@ void SendFileDialog::handle_loss_event()
     duplicate_ack_num = 0;
     resend_base = min(base + sending_window_size, next_seq_no);//重发
     for(int i=base; i<resend_base; i++) {
-        qDebug()<<"resend "<<i;
         sendData(i);
     }
     time.start();
@@ -177,7 +173,7 @@ void SendFileDialog::handle_loss_event()
 void SendFileDialog::sendData(int i)
 {
     int index = i%MAX_WINDOW_SIZE;
-    qDebug()<<"send pack "<<i;
+
     udpSocket->writeDatagram((char *)&pkts[index],sizeof(struct Packet),QHostAddress(recieverIP),1144);
     while (udpSocket->waitForBytesWritten()) {
     }
@@ -291,7 +287,6 @@ void SendFileDialog::startSend()
            pkt.checksum = packet_checksum(&pkt);
            pkts[next_seq_no%MAX_WINDOW_SIZE] = pkt;
            sendSize += length;
-           qDebug()<<"send bytes "<<sendSize;
            sendData(next_seq_no);
            bytesSend+=length;
            ui->progressBar->setValue(bytesSend);
