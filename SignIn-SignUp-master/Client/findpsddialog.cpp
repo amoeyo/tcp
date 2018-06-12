@@ -1,7 +1,7 @@
 #include "findpsddialog.h"
 #include "ui_findpsddialog.h"
 
-#define ip "192.168.5.1"
+#define ip "192.168.1.3"
 #define port 8000
 
 FindpsdDialog::FindpsdDialog(QWidget *parent) :
@@ -39,10 +39,8 @@ void FindpsdDialog::readMessages()
 {
     QString data=fpsdSocket->readAll();
     QStringList list=data.split("#");
-    if(list[0]=="d" && list[1]=="true"){
-        qDebug()<<list[2];
+    if(list[0]=="d" && list[1]=="true")
         QMessageBox::information(this,"密码提示",list[2],QMessageBox::Ok);
-    }
     else if(list[0]=="d" && list[1]=="false")
         QMessageBox::information(this,"信息提示","找回密码失败,答案错误!",QMessageBox::Ok);
     else

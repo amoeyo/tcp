@@ -1,7 +1,7 @@
 #include "talantoo.h"
 #include "ui_talantoo.h"
 
-#define ip "192.168.5.1"
+#define ip "192.168.1.3"
 #define port 8000
 
 TalantOO::TalantOO(QWidget *parent) :
@@ -229,10 +229,8 @@ void TalantOO::on_sendmessPbt_clicked()
     else if(isconnect==toserver){
         QString textEdit = ui->sendmessLet->text();
         QString strData = QTime::currentTime().toString() + "\n" + textEdit.toLocal8Bit() + "\n";
-        mChat = mChat + username + " " +strData;
-        QString show;
-        show=mChat+"(offline)";
-        ui->textBrowser->setText(show);
+        mChat = mChat + username + " " +strData+" (offline)";
+        ui->textBrowser->setText(mChat);
         QString bs="o";
         QString offlineEdit=bs+"#"+chatname+"#"+mChat;
         fusrSocket->write(offlineEdit.toLatin1());

@@ -106,17 +106,22 @@ void ReveiveDialog::readPendingDatagrams()
 
         udpSocket->readDatagram((char*)&pkt_buf,(qint64)sizeof(struct Packet));
         pkt = (struct Packet *) pkt_buf;
+        qDebug()<<"packet seq"<<pkt->seq;
 
         if(pkt->seq == (unsigned int)expected_seq_no && pkt->checksum == packet_checksum(pkt)) {
             int data_size = pkt->len - 8;
             //file.write(pkt->data);
             int len=out.writeRawData(pkt->data,data_size);
+
+            qDebug()<<"recieve packet "<<pkt->seq;
+            qDebug()<<"data length"<<len;
             bytesReceived=file.size();
             expected_seq_no++;
         }
         /*send ACK*/
         ack.ack = expected_seq_no-1;
         ack.checksum = ack_packet_checksum(&ack);
+        qDebug()<<"bytes received"<<bytesReceived;
         if(bytesReceived>=fileSize){
             if(begintime.msecsTo(endtime)==0)
             {
@@ -132,6 +137,7 @@ void ReveiveDialog::readPendingDatagrams()
             timer.stop();
             timer.start(10000);
         }
+        qDebug()<<"send ack "<<ack.ack<<" "<<ack.len;
         udpSocket->writeDatagram((char *)&ack,sizeof(struct AckPacket),QHostAddress(sendIP),2244);
     }
     ui->progressBar->setValue(bytesReceived);
@@ -140,6 +146,7 @@ void ReveiveDialog::readPendingDatagrams()
 
 void ReveiveDialog::handleTimeout()
 {
+    qDebug()<<"超时";
     timer.stop();
     state=0;
 }

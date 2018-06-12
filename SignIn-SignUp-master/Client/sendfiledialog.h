@@ -68,7 +68,7 @@ private:
     int i;
     bool flag;
     int expected_seq_no = 0;
-    int sending_window_size;//滑动窗口大小
+    int sending_window_size = 250;//滑动窗口大小
     int remaining_chunks;
     int base=0,  next_seq_no=0;
     int duplicate_ack_num=0, resend_base=0;
